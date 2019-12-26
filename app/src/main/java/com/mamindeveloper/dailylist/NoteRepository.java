@@ -1,0 +1,110 @@
+package com.mamindeveloper.dailylist;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+
+public class NoteRepository {
+    private static final NoteRepository ourInstance = new NoteRepository();
+
+    public static NoteRepository getInstance() {
+        return ourInstance;
+    }
+
+    private NoteRepository() {
+    }
+
+    public ArrayList<Note> getNotes(DateTime dateFilter) {
+        ArrayList<Note> notes = new ArrayList<>();
+
+        ArrayList<NoteContentField> contentFields = new ArrayList<>();
+
+        contentFields.add(new NoteContentFieldTextArea("text area"));
+        contentFields.add(new NoteContentFieldListItem("list item", false));
+        contentFields.add(new NoteContentFieldListItem("list item 1", true));
+        contentFields.add(new NoteContentFieldImage("https://static.boredpanda.com/blog/wp-content/uploads/2019/11/criminal-cat-solitary-confinement-quilty-fb-png__700.jpg"));
+
+        notes.add(
+            new Note(
+                    0,
+                    1,
+                    DateTime.now(),
+                    DateTime.now(),
+                    false,
+                    false,
+                    "Title",
+                    contentFields
+            )
+        );
+
+        return notes;
+    }
+
+    public ArrayList<Note> _getNotes(DateTime dateFilter) {
+        ArrayList<Note> notes = new ArrayList<>();
+
+        String sql = "select id, color_id, start_date_time, end_date_time, title, content_fields " +
+                "from note " +
+                "where start_date_time >= ? AND start_date_time < ?";
+
+
+        String[] params = new String[] { String.valueOf(dateFilter.withTimeAtStartOfDay().getMillis()), String.valueOf(dateFilter.plusDays(1).withTimeAtStartOfDay().getMillis()) };
+
+        Cursor cursor = DBHelper.getInstance().getWritableDatabase().rawQuery(sql, params);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+
+                int colorId = cursor.getInt(cursor.getColumnIndex("color_id"));
+
+                long _startDateTime = cursor.getLong(cursor.getColumnIndex("start_date_time"));
+                DateTime startDateTime = new DateTime(_startDateTime);
+                long _endDateTime = cursor.getLong(cursor.getColumnIndex("end_date_time"));
+                DateTime endDateTime = new DateTime(_endDateTime);
+
+                String title = cursor.getString(cursor.getColumnIndex("title"));
+
+                String contentFieldsJson = cursor.getString(cursor.getColumnIndex("content_fields"));
+                ArrayList<NoteContentField> contentFields = new ArrayList<NoteContentField>();
+                Gson gson = new Gson();
+                JsonParser parser = new JsonParser();
+                if (contentFieldsJson.length() > 0) {
+                    JsonArray array = parser.parse(contentFieldsJson).getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        NoteContentField contentField = gson.fromJson(array.get(i), NoteContentField.class);
+                        contentFields.add(contentField);
+                    }
+                }
+
+                notes.add(new Note(id, colorId, startDateTime, endDateTime, false, false, title, contentFields));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return notes;
+    }
+
+    public void addNote(Note note) {
+        ContentValues cv = new ContentValues();
+        cv.put("id", note.id);
+        cv.put("colorId", note.colorId);
+        cv.put("start_date_time", note.startDateTime.getMillis());
+        cv.put("end_date_time", note.endDateTime.getMillis());
+        cv.put("title", note.title);
+
+        Gson gson = new Gson();
+        String contentFieldsJson = gson.toJson(note.contentFields);
+        cv.put("content_fields", contentFieldsJson);
+
+        note.id = (int) DBHelper.getInstance().getWritableDatabase().insert("note", null, cv);
+    }
+}
