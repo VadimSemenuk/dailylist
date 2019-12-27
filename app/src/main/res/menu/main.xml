@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/app_bar_main_calendar"
+        android:icon="@drawable/ic_date_range_black_24dp"
+        app:showAsAction="always"
+        android:title="@string/app_bar_main_add">
+    </item>
+
+    <item android:id="@+id/app_bar_main_add"
+        android:icon="@drawable/ic_add_black_24dp"
+        app:showAsAction="always"
+        android:title="@string/app_bar_main_add">
+    </item>
+</menu>
