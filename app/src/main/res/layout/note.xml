@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
 
         <LinearLayout
             android:id="@+id/note_color"
-            android:layout_width="5dp"
+            android:layout_width="7dp"
             android:layout_height="match_parent"
             android:orientation="vertical"></LinearLayout>
 
@@ -27,12 +29,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="10dp">
 
             <LinearLayout
                 android:id="@+id/note_meta_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -41,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="11:00 - 12:00"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/note_notification_label"

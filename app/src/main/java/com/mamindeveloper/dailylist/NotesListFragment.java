@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -80,7 +78,7 @@ public class NotesListFragment extends Fragment {
             noteView.findViewById(R.id.note_color).setBackgroundColor(Color.parseColor(note.getColor()));
 
             String noteTime = "";
-            DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("k:m");
+            DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm");
             String startTimeFormatted = timeFormatter.print(note.startDateTime);
             noteTime += startTimeFormatted;
             if (note.endDateTime != null) {

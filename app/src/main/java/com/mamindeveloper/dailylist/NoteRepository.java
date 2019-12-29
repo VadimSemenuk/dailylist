@@ -24,25 +24,27 @@ public class NoteRepository {
     public ArrayList<Note> getNotes(DateTime dateFilter) {
         ArrayList<Note> notes = new ArrayList<>();
 
-        ArrayList<NoteContentField> contentFields = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            ArrayList<NoteContentField> contentFields = new ArrayList<>();
 
-        contentFields.add(new NoteContentFieldTextArea("text area"));
-        contentFields.add(new NoteContentFieldListItem("list item", false));
-        contentFields.add(new NoteContentFieldListItem("list item 1", true));
-        contentFields.add(new NoteContentFieldImage("https://static.boredpanda.com/blog/wp-content/uploads/2019/11/criminal-cat-solitary-confinement-quilty-fb-png__700.jpg"));
+            contentFields.add(new NoteContentFieldTextArea("text area"));
+            contentFields.add(new NoteContentFieldListItem("list item" + i, false));
+            contentFields.add(new NoteContentFieldListItem("list item 1" + i, true));
+            contentFields.add(new NoteContentFieldImage("https://static.boredpanda.com/blog/wp-content/uploads/2019/11/criminal-cat-solitary-confinement-quilty-fb-png__700.jpg"));
 
-        notes.add(
-            new Note(
-                    0,
-                    1,
-                    DateTime.now(),
-                    DateTime.now(),
-                    false,
-                    false,
-                    "Title",
-                    contentFields
-            )
-        );
+            notes.add(
+                    new Note(
+                            i,
+                            1,
+                            DateTime.now(),
+                            DateTime.now(),
+                            false,
+                            false,
+                            "Title" + i,
+                            contentFields
+                    )
+            );
+        }
 
         return notes;
     }
