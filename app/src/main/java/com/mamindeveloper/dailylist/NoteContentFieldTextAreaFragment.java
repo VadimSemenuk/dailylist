@@ -33,7 +33,7 @@ public class NoteContentFieldTextAreaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.note_content_field_list_item, container, false);
+        View view = inflater.inflate(R.layout.note_content_field_text_area, container, false);
 
         inputView = view.findViewById(R.id.input);
         removeButton = view.findViewById(R.id.remove);

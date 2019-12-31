@@ -47,11 +47,14 @@
         android:layout_height="wrap_content"
         android:background="#FAFAFA"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingTop="@dimen/activity_margin"
+        android:paddingBottom="@dimen/activity_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -91,7 +94,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -166,12 +171,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
+            android:layout_marginTop="13dp"
+            android:orientation="horizontal">
+            <fragment
+                android:id="@+id/color_picker"
+                android:name="com.mamindeveloper.dailylist.ColorPickerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_color_picker" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 

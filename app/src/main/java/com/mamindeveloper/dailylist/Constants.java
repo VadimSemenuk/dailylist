@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final HashMap<Integer, String> NOTE_COLORS = new HashMap<Integer, String>() {{
-        put(0, null);
+        put(0, "#FFFFFF");
         put(1, "#00213C");
         put(2, "#c5282f");
         put(3, "#62A178");

@@ -29,4 +29,7 @@
     <string name="note_action_add">Добавлено</string>
     <string name="note_action_edit">Последнее обновление</string>
     <string name="note_action_delete">Удалено</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

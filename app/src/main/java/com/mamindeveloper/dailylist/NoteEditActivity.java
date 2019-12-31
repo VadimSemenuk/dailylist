@@ -27,6 +27,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class NoteEditActivity
         extends AppCompatActivity
@@ -47,6 +48,7 @@ public class NoteEditActivity
     TextView startTimeView;
     TextView endTimeView;
     Switch notificationView;
+    ColorPickerFragment colorPickerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +70,22 @@ public class NoteEditActivity
         startTimeView = findViewById(R.id.start_time);
         endTimeView = findViewById(R.id.end_time);
         notificationView = findViewById(R.id.notification);
+        colorPickerFragment = (ColorPickerFragment) getSupportFragmentManager().findFragmentById(R.id.color_picker);
 
         if (false) {
             setLastActionView();
         }
+
+        Set<Integer> _keys = Constants.NOTE_COLORS.keySet();
+        Integer[] keys = _keys.toArray(new Integer[_keys.size()]);
+        ArrayList<ColorPickerItem> colors = new ArrayList<>();
+        for (int i = 0; i < keys.length; i++) {
+            ColorPickerItem color = new ColorPickerItem();
+            color.id = keys[i];
+            color.value = Constants.NOTE_COLORS.get(keys[i]);
+            colors.add(color);
+        }
+        colorPickerFragment.setColors(colors);
 
         findViewById(R.id.add_text).setOnClickListener(new View.OnClickListener() {
             @Override
