@@ -32,18 +32,19 @@ public class NoteRepository {
             contentFields.add(new NoteContentFieldListItem("list item 1" + i, true));
             contentFields.add(new NoteContentFieldImage("https://static.boredpanda.com/blog/wp-content/uploads/2019/11/criminal-cat-solitary-confinement-quilty-fb-png__700.jpg"));
 
-            notes.add(
-                    new Note(
-                            i,
-                            1,
-                            DateTime.now(),
-                            DateTime.now(),
-                            false,
-                            false,
-                            "Title" + i,
-                            contentFields
-                    )
-            );
+            Note note = new Note();
+            note.id = i;
+            note.colorId = 1;
+            note.startDateTime = DateTime.now();
+            note.startDateTime = DateTime.now();
+            note.isFinished = false;
+            note.isNotificationEnabled = false;
+            note.title = "Title " + i;
+            note.contentFields = contentFields;
+            note.lastActionDate = DateTime.now();
+            note.lastAction = NoteActions.ADD;
+
+            notes.add(note);
         }
 
         return notes;
@@ -86,7 +87,17 @@ public class NoteRepository {
                     }
                 }
 
-                notes.add(new Note(id, colorId, startDateTime, endDateTime, false, false, title, contentFields));
+                Note note = new Note();
+                note.id = id;
+                note.colorId = colorId;
+                note.startDateTime = startDateTime;
+                note.startDateTime = endDateTime;
+                note.isFinished = false;
+                note.isNotificationEnabled = false;
+                note.title = title;
+                note.contentFields = contentFields;
+
+                notes.add(note);
             }
             while (cursor.moveToNext());
         }

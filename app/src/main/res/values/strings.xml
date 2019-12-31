@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Ежедневник</string>
 
+    <!--    main-->
     <string name="app_bar_main_search_hint">Поиск</string>
 
-    <string name="app_bar_main_calendar">calendar</string>
-    <string name="app_bar_main_add">add</string>
+    <string name="app_bar_main_calendar">Календарь</string>
+    <string name="app_bar_main_add">Добавить</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -15,6 +16,17 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_about">О приложении</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--    note-edit-->
+    <string name="app_bar_note_edit_confirm">Сохранить</string>
+    <string name="app_bar_note_edit_calendar">Календарь</string>
+    <string name="app_bar_note_title_hint">Название</string>
+    <string name="app_bar_note_text_hint">Текст</string>
+    <string name="app_bar_note_list_item">Текст</string>
+    <string name="camera">Камера</string>
+    <string name="gallery">Галерея</string>
+    <string name="time_pick_clear">Очистить</string>
+
+    <string name="note_action_add">Добавлено</string>
+    <string name="note_action_edit">Последнее обновление</string>
+    <string name="note_action_delete">Удалено</string>
 </resources>
