@@ -30,6 +30,17 @@
     <string name="note_action_edit">Последнее обновление</string>
     <string name="note_action_delete">Удалено</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+<!--    preferences-->
+    <string name="title_activity_settings">Настройки</string>
+    <string name="display_header">Отображение</string>
+    <string name="sort_title">Сортровка</string>
+    <string name="sort_direction_title">Порядок отображения</string>
+    <string name="interface_header">Интерфейс</string>
+    <string name="dark_theme_title">Темная тема</string>
+    <string name="font_size_title">Размер шрифта</string>
+    <string name="collapse_notes_title">Сворачивать длянные заметки</string>
+    <string name="finished_section_title">Перемещать завершенные вниз</string>
+    <string name="language_title">Язык</string>
+    <string name="other_header">Разное</string>
+    <string name="auto_notification_title">Автоматически добавлять уведомление</string>
 </resources>

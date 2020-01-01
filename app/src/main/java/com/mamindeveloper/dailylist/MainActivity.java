@@ -8,8 +8,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -92,6 +94,9 @@ public class MainActivity
 
         if (id == R.id.app_bar_main_calendar) {
             diaryFragment.triggerCalendarMode();
+        } else if (id == R.id.app_bar_main_add) {
+            Intent intent = new Intent(this, NoteEditActivity.class);
+            startActivity(intent);
         }
 
         return true;
@@ -108,7 +113,8 @@ public class MainActivity
             setNoteListFragment();
         } else if (id == R.id.nav_trash) {
         } else if (id == R.id.nav_settings) {
-            Toast.makeText(getApplicationContext(), "nav_settings", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         drawer.closeDrawer(GravityCompat.START);

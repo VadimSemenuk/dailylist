@@ -1,0 +1,47 @@
+<resources>
+<!--    Sort preference-->
+    <string-array name="sort_entries">
+        <item>По указанному времени</item>
+        <item>По времени добавления</item>
+    </string-array>
+
+    <string-array name="sort_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!--    Sort direction preference-->
+    <string-array name="sort_direction_entries">
+        <item>По указанному времени</item>
+        <item>По времени добавления</item>
+    </string-array>
+
+    <string-array name="sort_direction_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!--    Font size preference-->
+    <string-array name="font_size_values">
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+    </string-array>
+
+    <!--    Language preference-->
+    <string-array name="language_entries">
+        <item>Русский</item>
+        <item>English</item>
+        <item>Беларускі</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>ru</item>
+        <item>en</item>
+        <item>be</item>
+    </string-array>
+</resources>
