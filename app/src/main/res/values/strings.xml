@@ -30,8 +30,8 @@
     <string name="note_action_edit">Последнее обновление</string>
     <string name="note_action_delete">Удалено</string>
 
-<!--    preferences-->
-    <string name="title_activity_settings">Настройки</string>
+    <!--    preferences-->
+    <string name="settings_activity_title">Настройки</string>
     <string name="display_header">Отображение</string>
     <string name="sort_title">Сортровка</string>
     <string name="sort_direction_title">Порядок отображения</string>
@@ -43,4 +43,14 @@
     <string name="language_title">Язык</string>
     <string name="other_header">Разное</string>
     <string name="auto_notification_title">Автоматически добавлять уведомление</string>
+
+<!--    about-->
+    <string name="about_activity_title">О приложении</string>
+    <string name="copyright">Ⓒ 2017 Mamindeveloper</string>
+    <string name="developer_email">mamindeveloper@gmail.com</string>
+    <string name="rate_app">Оценить приложение</string>
+    <string name="used_resources">Использованные ресурсы</string>
+    <string name="used_resources_credits">
+        <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+    </string>
 </resources>
