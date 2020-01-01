@@ -37,6 +37,13 @@
         android:gravity="center_horizontal"
         android:text="@string/developer_email" />
 
+    <Button
+        android:id="@+id/rate_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:text="@string/rate_app" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
