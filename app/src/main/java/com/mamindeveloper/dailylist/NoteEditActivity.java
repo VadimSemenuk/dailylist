@@ -9,12 +9,14 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -47,6 +49,8 @@ public class NoteEditActivity
     Fragment contentFieldFragmentToAddOnResume;
     TextView startTimeView;
     TextView endTimeView;
+    ImageButton startTimeButton;
+    ImageButton endTimeButton;
     Switch notificationView;
     ColorPickerFragment colorPickerFragment;
 
@@ -69,6 +73,8 @@ public class NoteEditActivity
         contentFieldsWrapper = findViewById(R.id.content_fields_wrapper);
         startTimeView = findViewById(R.id.start_time);
         endTimeView = findViewById(R.id.end_time);
+        startTimeButton = findViewById(R.id.add_start_time);
+        endTimeButton = findViewById(R.id.add_end_time);
         notificationView = findViewById(R.id.notification);
         colorPickerFragment = (ColorPickerFragment) getSupportFragmentManager().findFragmentById(R.id.color_picker);
 
@@ -86,6 +92,9 @@ public class NoteEditActivity
             colors.add(color);
         }
         colorPickerFragment.setColors(colors);
+
+        startTimeView.setPaintFlags(startTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        endTimeView.setPaintFlags(endTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         findViewById(R.id.add_text).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +117,28 @@ public class NoteEditActivity
             }
         });
 
-        findViewById(R.id.add_start_time).setOnClickListener(new View.OnClickListener() {
+        startTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setTime(0);
             }
         });
 
-        findViewById(R.id.add_end_time).setOnClickListener(new View.OnClickListener() {
+        startTimeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTime(0);
+            }
+        });
+
+        endTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTime(1);
+            }
+        });
+
+        endTimeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setTime(1);
@@ -284,16 +307,20 @@ public class NoteEditActivity
     private void setTimeView() {
         if (startDateTime != null) {
             startTimeView.setVisibility(View.VISIBLE);
+            startTimeButton.setVisibility(View.GONE);
             startTimeView.setText(timeFormatter.print(startDateTime));
         } else {
             startTimeView.setVisibility(View.GONE);
+            startTimeButton.setVisibility(View.VISIBLE);
         }
 
         if (endDateTime != null) {
             endTimeView.setVisibility(View.VISIBLE);
+            endTimeButton.setVisibility(View.GONE);
             endTimeView.setText(timeFormatter.print(endDateTime));
         } else {
             endTimeView.setVisibility(View.GONE);
+            endTimeButton.setVisibility(View.VISIBLE);
         }
     }
 

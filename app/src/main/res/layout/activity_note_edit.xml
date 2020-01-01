@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     tools:context=".NoteEditActivity">
 
     <ScrollView
@@ -39,7 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="#D1D1D1"
+        android:background="#F0F0E6"
         android:orientation="horizontal"></LinearLayout>
 
     <LinearLayout
@@ -68,7 +70,7 @@
                     android:id="@+id/add_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="20dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/ic_text_fields_black_24dp" />
 
@@ -76,7 +78,7 @@
                     android:id="@+id/add_list_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="20dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp" />
 
@@ -84,87 +86,88 @@
                     android:id="@+id/add_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/ic_image_black_24dp" />
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:layout_marginLeft="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/start_time"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:visibility="gone"
-                    android:text="16:00" />
+                    android:layout_marginRight="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/add_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                    <TextView
+                        android:id="@+id/start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="3dp"
+                        android:text="16:00"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/add_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+                    <LinearLayout
+                        android:id="@+id/add_end_time_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:text="-" />
+
+                        <TextView
+                            android:id="@+id/end_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="3dp"
+                            android:text="16:00"
+                            android:visibility="gone" />
+
+                        <ImageButton
+                            android:id="@+id/add_end_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/add_end_time_wrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:text="-" />
 
-                    <TextView
-                        android:id="@+id/end_time"
+                    <ImageView
+                        android:id="@+id/imageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:visibility="gone"
-                        android:text="16:00" />
+                        android:src="@drawable/ic_alarm_black_24dp" />
 
-                    <ImageButton
-                        android:id="@+id/add_end_time"
+                    <Switch
+                        android:id="@+id/notification"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Switch
-                    android:id="@+id/notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Уведомление   " />
             </LinearLayout>
         </LinearLayout>
 
@@ -173,6 +176,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="13dp"
             android:orientation="horizontal">
+
             <fragment
                 android:id="@+id/color_picker"
                 android:name="com.mamindeveloper.dailylist.ColorPickerFragment"
@@ -184,8 +188,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
             android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginTop="13dp"
             android:layout_marginRight="@dimen/activity_margin"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
