@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     android:focusable="true"
-    tools:context=".NoteEditActivity">
+    tools:context=".NoteEdit.NoteEditActivity">
 
     <ScrollView
         android:id="@+id/scroll"
@@ -179,7 +179,7 @@
 
             <fragment
                 android:id="@+id/color_picker"
-                android:name="com.mamindeveloper.dailylist.ColorPickerFragment"
+                android:name="com.mamindeveloper.dailylist.ColorPicker.ColorPickerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_color_picker" />
