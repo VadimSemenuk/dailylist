@@ -44,7 +44,7 @@
     <string name="other_header">Разное</string>
     <string name="auto_notification_title">Автоматически добавлять уведомление</string>
 
-<!--    about-->
+    <!--    about-->
     <string name="about_activity_title">О приложении</string>
     <string name="copyright">Ⓒ 2017 Mamindeveloper</string>
     <string name="developer_email">mamindeveloper@gmail.com</string>
@@ -53,4 +53,16 @@
     <string name="used_resources_credits">
         <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </string>
+
+<!--    login-->
+    <string name="login_activity_title">Вход</string>
+    <string name="error_invalid_email">Email адрес не валидный</string>
+    <string name="error_invalid_password">Пароль доглжен содердать не менее 4 символов</string>
+    <string name="error_incorrect_password">Не правильный пароль</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Регистрация</string>
+    <string name="reset_password">Сбросить пароль</string>
+    <string name="reset_password_notification">Новый пароль отправлен на адрес</string>
 </resources>
