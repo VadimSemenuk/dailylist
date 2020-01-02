@@ -1,6 +1,7 @@
 package com.mamindeveloper.dailylist.Services;
 
 import com.mamindeveloper.dailylist.Api.AuthApi;
+import com.mamindeveloper.dailylist.Api.UserApi;
 import com.mamindeveloper.dailylist.Repositories.AuthRepository;
 
 import java.io.IOException;
@@ -50,4 +51,6 @@ public class NetworkService {
     public AuthApi getAuthApi() {
         return mRetrofit.create(AuthApi.class);
     }
+
+    public UserApi getUserApi() { return mRetrofit.create(UserApi.class); }
 }

@@ -1,9 +1,14 @@
 package com.mamindeveloper.dailylist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,16 +21,23 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mamindeveloper.dailylist.Login.LoginBody;
+import com.mamindeveloper.dailylist.Login.LoginResponse;
 import com.mamindeveloper.dailylist.Main.MainActivity;
 import com.mamindeveloper.dailylist.Models.User;
 import com.mamindeveloper.dailylist.NoteEdit.NoteEditActivity;
 import com.mamindeveloper.dailylist.NotesList.Note;
 import com.mamindeveloper.dailylist.Repositories.AuthRepository;
+import com.mamindeveloper.dailylist.Services.NetworkService;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+
 public class ProfileActivity extends AppCompatActivity {
+
+    private View progressBarView;
 
     User user;
 
@@ -39,8 +51,20 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        progressBarView = findViewById(R.id.progress_bar);
+
         user = AuthRepository.getInstance().getUser();
         backupDateFormatter = DateTimeFormat.forPattern("d MMMM yyyy, HH:mm");
+
+        ((TextView) findViewById(R.id.name)).setText(user.getName());
+        ((TextView) findViewById(R.id.email)).setText(user.getEmail());
+
+        findViewById(R.id.refresh_backups).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshBackups();
+            }
+        });
 
         setBackupsList();
     }
@@ -104,5 +128,30 @@ public class ProfileActivity extends AppCompatActivity {
         AlarmManager mgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
         System.exit(0);
+    }
+
+    private void refreshBackups() {
+        progressBarView.setVisibility(View.VISIBLE);
+
+        NetworkService
+                .getInstance()
+                .getUserApi()
+                .getUserBackups()
+                .enqueue(new Callback<ArrayList<User.Backup>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ArrayList<User.Backup>> call, @NonNull Response<ArrayList<User.Backup>> response) {
+                        progressBarView.setVisibility(View.GONE);
+
+                        ArrayList<User.Backup> backups = response.body();
+                        user.setBackups(backups);
+                        AuthRepository.getInstance().setUser(user);
+                        setBackupsList();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ArrayList<User.Backup>> call, @NonNull Throwable t) {
+                        progressBarView.setVisibility(View.GONE);
+                    }
+                });
     }
 }
