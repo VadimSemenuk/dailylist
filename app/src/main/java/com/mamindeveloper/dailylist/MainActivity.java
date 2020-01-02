@@ -118,6 +118,13 @@ public class MainActivity
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_profile) {
+            if (AuthRepository.getInstance().hasToken()) {
+
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
         }
 
         drawer.closeDrawer(GravityCompat.START);

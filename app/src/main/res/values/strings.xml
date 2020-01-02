@@ -54,13 +54,18 @@
         <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </string>
 
-<!--    login-->
+    <!--    login, register-->
     <string name="login_activity_title">Вход</string>
+    <string name="register_activity_title">Регистрация</string>
     <string name="error_invalid_email">Email адрес не валидный</string>
     <string name="error_invalid_password">Пароль доглжен содердать не менее 4 символов</string>
+    <string name="error_invalid_password_repeat">Пароли не совпадают</string>
+    <string name="error_invalid_name">Имя обязательно</string>
     <string name="error_incorrect_password">Не правильный пароль</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Пароль</string>
+    <string name="password_repeat_hint">Повторите пароль</string>
+    <string name="name_hint">Имя</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Регистрация</string>
     <string name="reset_password">Сбросить пароль</string>
