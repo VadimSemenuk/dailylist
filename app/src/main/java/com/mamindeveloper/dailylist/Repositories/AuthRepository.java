@@ -9,6 +9,10 @@ import com.google.gson.JsonParser;
 import com.mamindeveloper.dailylist.App;
 import com.mamindeveloper.dailylist.Models.User;
 
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+
 public class AuthRepository {
     private static final AuthRepository ourInstance = new AuthRepository();
 
@@ -30,6 +34,14 @@ public class AuthRepository {
     }
 
     public User getUser() {
+        ArrayList<User.Backup> backups = new ArrayList<>();
+        backups.add(new User.Backup(0, DateTime.now(), false));
+        backups.add(new User.Backup(0, DateTime.now(), false));
+        backups.add(new User.Backup(0, DateTime.now(), true));
+        backups.add(new User.Backup(0, DateTime.now(), true));
+        return new User(0, "vadim54787@gmail.com", "Vadim Semenyuk", backups);
+    }
+    public User _getUser() {
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         SharedPreferences prefs = App.getAppContext().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);

@@ -14,13 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Register.RegisterActivity"
-            android:label="@string/register_activity_title">
+            android:name=".ProfileActivity"
+            android:label="@string/profile_activity_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
+            android:name=".Register.RegisterActivity"
+            android:label="@string/register_activity_title"></activity>
+        <activity
             android:name=".Login.LoginActivity"
-            android:label="@string/login_activity_title">
-        </activity>
+            android:label="@string/login_activity_title"></activity>
         <activity
             android:name=".AboutActivity"
             android:label="@string/about_activity_title" />
@@ -31,11 +38,6 @@
         <activity
             android:name=".Main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
