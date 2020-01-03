@@ -13,6 +13,7 @@ import com.mamindeveloper.dailylist.NotesList.NoteContentField;
 import com.mamindeveloper.dailylist.NotesList.NoteContentFieldImage;
 import com.mamindeveloper.dailylist.NotesList.NoteContentFieldListItem;
 import com.mamindeveloper.dailylist.NotesList.NoteContentFieldTextArea;
+import com.mamindeveloper.dailylist.NotesList.NoteTypes;
 
 import org.joda.time.DateTime;
 
@@ -28,7 +29,7 @@ public class NoteRepository {
     private NoteRepository() {
     }
 
-    public ArrayList<Note> getNotes(DateTime dateFilter) {
+    public ArrayList<Note> getNotes(NoteTypes type, DateTime dateFilter, String search) {
         ArrayList<Note> notes = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {

@@ -21,12 +21,21 @@ import java.util.ArrayList;
 
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
+    private DateTimeFormatter timeFormatter;
+    private DateTimeFormatter sectionTitleFormatter;
+
     private final ArrayList<Note> mValues;
+    private Boolean showHeader;
+
     private final NoteListFragment.OnListFragmentInteractionListener mListener;
 
-    public NoteRecyclerViewAdapter(ArrayList<Note> items, NoteListFragment.OnListFragmentInteractionListener listener) {
+    public NoteRecyclerViewAdapter(ArrayList<Note> items, NoteListFragment.OnListFragmentInteractionListener listener, Boolean showHeader) {
         mValues = items;
         mListener = listener;
+        this.showHeader = showHeader;
+
+        timeFormatter = DateTimeFormat.forPattern("HH:mm");
+        sectionTitleFormatter = DateTimeFormat.forPattern("d MMMM, yyyy");
     }
 
     @Override
@@ -44,7 +53,6 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         holder.mColorView.setBackgroundColor(Color.parseColor(note.getColor()));
 
         String noteTime = "";
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm");
         String startTimeFormatted = timeFormatter.print(note.startDateTime);
         noteTime += startTimeFormatted;
         if (note.endDateTime != null) {
@@ -96,6 +104,13 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
                 }
             }
         });
+
+        if (showHeader && (position == 0 || ! mValues.get(position - 1).startDateTime.withTimeAtStartOfDay().isEqual(note.startDateTime.withTimeAtStartOfDay()))) {
+            holder.mHeaderView.setVisibility(View.VISIBLE);
+            holder.mHeaderView.setText(sectionTitleFormatter.print(note.startDateTime));
+        } else {
+            holder.mHeaderView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -110,6 +125,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         public final ImageView mNotificationLabelView;
         public final TextView mTitleView;
         public final LinearLayout mContentFieldsWrapperView;
+        public final TextView mHeaderView;
         public Note mItem;
 
         public ViewHolder(View view) {
@@ -120,6 +136,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             mNotificationLabelView = (ImageView) view.findViewById(R.id.note_notification_label);
             mTitleView = (TextView) view.findViewById(R.id.note_title);
             mContentFieldsWrapperView = (LinearLayout) view.findViewById(R.id.note_content_fields_wrapper);
+            mHeaderView = (TextView) view.findViewById(R.id.title);
         }
 
         @Override

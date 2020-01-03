@@ -43,12 +43,12 @@ public class NoteListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
-        notes = NoteRepository.getInstance().getNotes(DateTime.now());
+        notes = NoteRepository.getInstance().getNotes(NoteTypes.Note, null, null);
 
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new NoteRecyclerViewAdapter(notes, mListener));
+        recyclerView.setAdapter(new NoteRecyclerViewAdapter(notes, mListener, false));
         return view;
     }
 

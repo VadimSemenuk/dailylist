@@ -17,6 +17,7 @@ public class Note {
     public Boolean isNotificationEnabled;
     public DateTime lastActionDate;
     public NoteActions lastAction;
+    public NoteTypes type;
 
     public String title;
     public ArrayList<NoteContentField> contentFields;

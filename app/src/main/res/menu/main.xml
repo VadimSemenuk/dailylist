@@ -6,7 +6,8 @@
         android:id="@+id/app_bar_search"
         android:title="@android:string/search_go"
         android:icon="@drawable/ic_search_black_24dp"
-        app:showAsAction="always|collapseActionView"
+        app:showAsAction="collapseActionView|always"
+        android:queryBackground="@android:color/transparent"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item

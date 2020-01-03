@@ -70,7 +70,7 @@ public class MainActivity
 
         this.menu = menu;
 
-        MenuItem searchItem = menu.findItem(R.id.app_bar_search);
+        final MenuItem searchItem = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(this);
         searchView.setQueryHint(getResources().getString(R.string.app_bar_main_search_hint));
@@ -80,11 +80,13 @@ public class MainActivity
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                setMenuOptionsVisibility(searchItem, false);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                setMenuOptionsVisibility(searchItem, true);
                 return true;
             }
         });
@@ -187,6 +189,15 @@ public class MainActivity
             calendarItem.setVisible(false);
         } else if (activeFragment == MainFragments.Trash) {
             calendarItem.setVisible(false);
+        }
+    }
+
+    private void setMenuOptionsVisibility(MenuItem exception, boolean visible) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item != exception)  {
+                item.setVisible(visible);
+            }
         }
     }
 

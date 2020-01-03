@@ -49,7 +49,7 @@ public class NotesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_notes_list, container, false);
 
-        notes = NoteRepository.getInstance().getNotes(DateTime.now());
+        notes = NoteRepository.getInstance().getNotes(NoteTypes.Diary, DateTime.now(), null);
 
         buildNotesList();
 
@@ -76,6 +76,8 @@ public class NotesListFragment extends Fragment {
             View noteView = ltInflater.inflate(R.layout.note, notesList, false);
 
             Note note = notes.get(i);
+
+            noteView.findViewById(R.id.title).setVisibility(View.GONE);
 
             noteView.findViewById(R.id.note_color).setBackgroundColor(Color.parseColor(note.getColor()));
 

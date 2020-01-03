@@ -16,11 +16,6 @@
         <activity
             android:name=".ProfileActivity"
             android:label="@string/profile_activity_title">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Register.RegisterActivity"
@@ -38,6 +33,11 @@
         <activity
             android:name=".Main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
