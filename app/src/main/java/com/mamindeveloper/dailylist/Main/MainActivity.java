@@ -20,6 +20,7 @@ import com.mamindeveloper.dailylist.Login.LoginActivity;
 import com.mamindeveloper.dailylist.NoteEdit.NoteEditActivity;
 import com.mamindeveloper.dailylist.NotesList.NoteListFragment;
 import com.mamindeveloper.dailylist.NotesList.NotesListFragment;
+import com.mamindeveloper.dailylist.ProfileActivity;
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.AuthRepository;
 import com.mamindeveloper.dailylist.SettingsActivity;
@@ -128,7 +129,8 @@ public class MainActivity
             startActivity(intent);
         } else if (id == R.id.nav_profile) {
             if (AuthRepository.getInstance().hasToken()) {
-
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
