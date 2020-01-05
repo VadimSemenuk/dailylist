@@ -4,19 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mamindeveloper.dailylist.NotesList.NotesListFragment;
 import com.mamindeveloper.dailylist.R;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public class DiaryFragment extends Fragment {
@@ -24,7 +29,6 @@ public class DiaryFragment extends Fragment {
 
     ViewPager notesListPager;
     PagerAdapter pagerAdapter;
-    MaterialCalendarView calendarView;
 
     public DiaryFragment() {
     }
@@ -48,12 +52,6 @@ public class DiaryFragment extends Fragment {
         pagerAdapter = new NotesListPagerAdapter(getChildFragmentManager());
         notesListPager.setAdapter(pagerAdapter);
 
-        calendarView = view.findViewById(R.id.calendar_view);
-        calendarView.setTopbarVisible(false);
-        calendarView.state().edit()
-                .setCalendarDisplayMode(CalendarMode.WEEKS)
-                .commit();
-
         return view;
     }
 
@@ -73,19 +71,6 @@ public class DiaryFragment extends Fragment {
         mListener = null;
         pagerAdapter = null;
         notesListPager = null;
-    }
-
-    public void triggerCalendarMode() {
-        CalendarMode nextMode;
-        if (calendarView.getCalendarMode() == CalendarMode.MONTHS) {
-            nextMode = CalendarMode.WEEKS;
-        } else {
-            nextMode = CalendarMode.MONTHS;
-        }
-
-        calendarView.state().edit()
-                .setCalendarDisplayMode(nextMode)
-                .commit();
     }
 
     public interface OnFragmentInteractionListener {

@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.mamindeveloper.dailylist.AboutActivity;
@@ -25,6 +27,8 @@ import com.mamindeveloper.dailylist.ProfileActivity;
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.AuthRepository;
 import com.mamindeveloper.dailylist.SettingsActivity;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public class MainActivity
         extends AppCompatActivity
@@ -37,8 +41,11 @@ public class MainActivity
     NoteListFragment noteListFragment;
     Menu menu;
     NavigationView navigationView;
-
+    MaterialCalendarView calendarView;
     MainFragments activeFragment;
+    LinearLayout calendarWrapperView;
+
+    Boolean isSearchMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+
+        calendarWrapperView = findViewById(R.id.calendar_wrapper);
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -63,6 +72,12 @@ public class MainActivity
 
         diaryFragment = DiaryFragment.newInstance();
         noteListFragment = NoteListFragment.newInstance();
+
+        calendarView = findViewById(R.id.calendar_view);
+        calendarView.setTopbarVisible(false);
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                .commit();
 
         setDiaryFragment();
     }
@@ -83,13 +98,15 @@ public class MainActivity
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                setMenuOptionsVisibility(searchItem, false);
+                isSearchMode = true;
+                setToolbarMenu();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                setMenuOptionsVisibility(searchItem, true);
+                isSearchMode = false;
+                setToolbarMenu();
                 return true;
             }
         });
@@ -104,7 +121,17 @@ public class MainActivity
         int id = item.getItemId();
 
         if (id == R.id.app_bar_main_calendar) {
-            diaryFragment.triggerCalendarMode();
+            CalendarMode nextMode;
+            if (calendarView.getCalendarMode() == CalendarMode.MONTHS) {
+                nextMode = CalendarMode.WEEKS;
+            } else {
+                nextMode = CalendarMode.MONTHS;
+            }
+
+            calendarView.state().edit()
+                    .setCalendarDisplayMode(nextMode)
+                    .commit();
+
         } else if (id == R.id.app_bar_main_add) {
             Intent intent = new Intent(this, NoteEditActivity.class);
             startActivity(intent);
@@ -185,14 +212,25 @@ public class MainActivity
             return;
         }
 
+        if (isSearchMode) {
+            setMenuOptionsVisibility(menu.findItem(R.id.app_bar_search), false);
+            calendarWrapperView.setVisibility(View.GONE);
+            return;
+        } else {
+            setMenuOptionsVisibility(menu.findItem(R.id.app_bar_search), true);
+        }
+
         MenuItem calendarItem = menu.findItem(R.id.app_bar_main_calendar);
 
         if (activeFragment == MainFragments.Diary) {
             calendarItem.setVisible(true);
+            calendarWrapperView.setVisibility(View.VISIBLE);
         } else if (activeFragment == MainFragments.Notes) {
             calendarItem.setVisible(false);
+            calendarWrapperView.setVisibility(View.GONE);
         } else if (activeFragment == MainFragments.Trash) {
             calendarItem.setVisible(false);
+            calendarWrapperView.setVisibility(View.GONE);
         }
     }
 
