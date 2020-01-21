@@ -24,15 +24,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("app-log", "--- onCreate database ---");
         db.execSQL("create table notes ("
                 + "id integer primary key autoincrement,"
+                + "colorId integer,"
+                + "startDateTime integer,"
+                + "endDateTime integer,"
+                + "isFinished integer,"
+                + "isNotificationEnabled integer,"
+                + "lastActionDate integer,"
+                + "lastAction integer,"
+                + "type integer,"
                 + "title text,"
-                + "description text" + ");");
+                + "contentFields text" + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d("app-log", "--- onUpgrade database ---");
     }
 }

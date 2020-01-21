@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -26,8 +27,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mamindeveloper.dailylist.ColorPicker.ColorPickerFragment;
 import com.mamindeveloper.dailylist.ColorPicker.ColorPickerItem;
 import com.mamindeveloper.dailylist.Constants;
+import com.mamindeveloper.dailylist.Enums.NoteActions;
 import com.mamindeveloper.dailylist.NotesList.Note;
+import com.mamindeveloper.dailylist.NotesList.NoteContentField;
+import com.mamindeveloper.dailylist.NotesList.NoteContentFieldListItem;
+import com.mamindeveloper.dailylist.NotesList.NoteContentFieldTextArea;
+import com.mamindeveloper.dailylist.NotesList.NoteTypes;
 import com.mamindeveloper.dailylist.R;
+import com.mamindeveloper.dailylist.Repositories.NoteRepository;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -45,7 +52,7 @@ public class NoteEditActivity
     DateTimeFormatter timeFormatter;
 
     Note note;
-    ArrayList<View> contentFieldsViews = new ArrayList<>();
+    ArrayList<Fragment> contentFieldsViews = new ArrayList<>();
     DateTime date;
     DateTime startDateTime;
     DateTime endDateTime;
@@ -187,6 +194,8 @@ public class NoteEditActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
+        super.onActivityResult(requestCode, resultCode, returnedIntent);
+
         NoteContentFieldImageFragment noteContentFieldImageFragment = NoteContentFieldImageFragment.newInstance();
         contentFieldFragmentToAddOnResume = noteContentFieldImageFragment;
 
@@ -231,12 +240,16 @@ public class NoteEditActivity
         NoteContentFieldTextAreaFragment noteContentFieldTextAreaFragment = NoteContentFieldTextAreaFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content_fields_wrapper, noteContentFieldTextAreaFragment).commit();
+
+        contentFieldsViews.add(noteContentFieldTextAreaFragment);
     }
 
     private void addListItemField() {
         NoteContentFieldListItemFragment noteContentFieldListItemFragment = NoteContentFieldListItemFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content_fields_wrapper, noteContentFieldListItemFragment).commit();
+
+        contentFieldsViews.add(noteContentFieldListItemFragment);
     }
 
     private void addImageField() {
@@ -351,17 +364,45 @@ public class NoteEditActivity
     }
 
     private void save() {
+        Note note = new Note();
+        note.colorId = colorPickerFragment.getSelectedColor().id;
+        note.startDateTime = startDateTime;
+        note.endDateTime = endDateTime;
+        note.isFinished = false;
+        note.isNotificationEnabled = notificationView.isChecked();
+        note.lastActionDate = DateTime.now();
+        note.lastAction = NoteActions.ADD;
+        note.type = NoteTypes.Diary;
+        note.title = ((EditText) findViewById(R.id.title)).getText().toString();
 
+        ArrayList<NoteContentField> contentFields = new ArrayList<>();
+        for (int i = 0; i < contentFieldsViews.size(); i++) {
+            Fragment fragment = contentFieldsViews.get(i);
+            if (fragment instanceof NoteContentFieldTextAreaFragment) {
+                String value = ((NoteContentFieldTextAreaFragment) fragment).getInputValue();
+                contentFields.add(new NoteContentFieldTextArea(value));
+            } else if (fragment instanceof NoteContentFieldListItemFragment) {
+                String text = ((NoteContentFieldListItemFragment) fragment).getInputValue();
+                Boolean isChecked = ((NoteContentFieldListItemFragment) fragment).getCheckedState();
+                contentFields.add(new NoteContentFieldListItem(text, isChecked));
+            }
+        }
+        note.contentFields = contentFields;
+        NoteRepository.getInstance().addNote(note);
     }
 
     public void onTextAreaRemove(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragment).commit();
+
+        contentFieldsViews.remove(fragment);
     }
 
     public void onListItemRemove(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragment).commit();
+
+        contentFieldsViews.remove(fragment);
     }
 
     public void onImageRemove(Fragment fragment) {
