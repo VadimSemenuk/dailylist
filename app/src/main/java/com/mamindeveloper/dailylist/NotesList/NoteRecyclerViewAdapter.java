@@ -28,7 +28,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
     private DateTimeFormatter sectionTitleFormatter;
 
     private final ArrayList<Note> mValues;
-    private Boolean showHeader;
+    public Boolean showHeader;
     private Boolean isCollapseNotesAllowed;
 
     private final OnListFragmentInteractionListener mListener;
@@ -152,9 +152,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             }
         });
 
-        if (showHeader && (position == 0 || ! mValues.get(position - 1).startDateTime.withTimeAtStartOfDay().isEqual(note.startDateTime.withTimeAtStartOfDay()))) {
+        if (showHeader && (position == 0 || ! mValues.get(position - 1).date.withTimeAtStartOfDay().isEqual(note.date.withTimeAtStartOfDay()))) {
             holder.mHeaderView.setVisibility(View.VISIBLE);
-            holder.mHeaderView.setText(sectionTitleFormatter.print(note.startDateTime));
+            holder.mHeaderView.setText(sectionTitleFormatter.print(note.date));
         } else {
             holder.mHeaderView.setVisibility(View.GONE);
         }

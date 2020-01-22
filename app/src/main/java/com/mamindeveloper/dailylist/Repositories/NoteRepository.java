@@ -62,11 +62,16 @@ public class NoteRepository {
     }
 
     public ArrayList<Note> getNotes(NoteTypes type, DateTime dateFilter, String search) {
+        if (search == "") {
+            return new ArrayList<>();
+        }
+
         ArrayList<Note> notes = new ArrayList<>();
 
         ArrayList<String> filterStatements = new ArrayList<>();
         ArrayList<String> params = new ArrayList<>();
-        if (dateFilter != null) {
+
+        if (dateFilter != null && search == null) {
             filterStatements.add("date >= ?");
             params.add(String.valueOf(dateFilter.withTimeAtStartOfDay().getMillis()));
             filterStatements.add("date < ?");
@@ -84,7 +89,7 @@ public class NoteRepository {
         Cursor cursor = DBHelper.getInstance().getWritableDatabase().rawQuery(sql, _params);
 
         if(cursor.moveToFirst()){
-            do{
+            do {
                 Note note = new Note();
 
                 note.id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -138,7 +143,33 @@ public class NoteRepository {
                 }
                 note.contentFields = contentFields;
 
-                notes.add(note);
+                if (search != null) {
+                    String _search = search.toLowerCase();
+
+                    Boolean isTitleValid = note.title.toLowerCase().contains(_search);
+
+                    Boolean isContentFieldsValid = false;
+                    for (int i = 0; i < contentFields.size(); i++) {
+                        NoteContentField _contentField = note.contentFields.get(i);
+
+                        if (_contentField instanceof NoteContentFieldListItem) {
+                            isContentFieldsValid = ((NoteContentFieldListItem) _contentField).text.toLowerCase().contains(_search);
+                        } else if (_contentField instanceof NoteContentFieldTextArea) {
+                            isContentFieldsValid = ((NoteContentFieldTextArea) _contentField).text.toLowerCase().contains(_search);
+                        }
+
+                        if (isContentFieldsValid) {
+                            break;
+                        }
+                    }
+
+                    if (isTitleValid || isContentFieldsValid) {
+                        notes.add(note);
+                    }
+                } else {
+                    notes.add(note);
+                }
+
             }
             while (cursor.moveToNext());
         }

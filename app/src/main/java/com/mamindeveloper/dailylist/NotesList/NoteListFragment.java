@@ -108,6 +108,13 @@ public class NoteListFragment extends Fragment implements NoteRecyclerViewAdapte
         updateData();
     }
 
+    public void setSearch(String search) {
+        noteRecyclerViewAdapter.showHeader = search != null;
+
+        this.search = search;
+        updateData();
+    }
+
     public void onNoteClick(Note note) {
     }
 

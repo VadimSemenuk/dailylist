@@ -119,6 +119,13 @@ public class MainActivity
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
                 isSearchMode = true;
                 setToolbarMenu();
+
+                if (activeFragment == MainFragments.Diary) {
+                    diaryFragment.setSearch("");
+                } else if (activeFragment == MainFragments.Notes) {
+                    noteListFragment.setSearch("");
+                }
+
                 return true;
             }
 
@@ -126,6 +133,13 @@ public class MainActivity
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 isSearchMode = false;
                 setToolbarMenu();
+
+                if (activeFragment == MainFragments.Diary) {
+                    diaryFragment.setSearch(null);
+                } else if (activeFragment == MainFragments.Notes) {
+                    noteListFragment.setSearch(null);
+                }
+
                 return true;
             }
         });
@@ -211,6 +225,12 @@ public class MainActivity
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        if (activeFragment == MainFragments.Diary) {
+            diaryFragment.setSearch(query);
+        } else if (activeFragment == MainFragments.Notes) {
+            noteListFragment.setSearch(query);
+        }
+
         return false;
     }
 

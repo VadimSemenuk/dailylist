@@ -90,6 +90,10 @@ public class DiaryFragment extends Fragment {
         noteListFragment.setDate(date);
     }
 
+    public void setSearch(String search) {
+        noteListFragment.setSearch(search);
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
