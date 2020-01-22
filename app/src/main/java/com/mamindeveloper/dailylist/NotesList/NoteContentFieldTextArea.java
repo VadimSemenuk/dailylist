@@ -1,6 +1,8 @@
 package com.mamindeveloper.dailylist.NotesList;
 
-public class NoteContentFieldTextArea extends NoteContentField {
+import java.io.Serializable;
+
+public class NoteContentFieldTextArea extends NoteContentField implements Serializable {
     public String text;
 
     public NoteContentFieldTextArea(String text) {

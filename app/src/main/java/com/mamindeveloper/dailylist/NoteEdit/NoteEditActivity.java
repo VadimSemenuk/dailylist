@@ -66,6 +66,7 @@ public class NoteEditActivity
     ImageButton endTimeButton;
     Switch notificationView;
     ColorPickerFragment colorPickerFragment;
+    TextView titleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,14 @@ public class NoteEditActivity
         setContentView(R.layout.activity_note_edit);
 
         Intent intent = getIntent();
-        date = (DateTime) intent.getSerializableExtra("date");
-        noteType = NoteTypes.valueOf(intent.getIntExtra("noteType", 1));
+        note = (Note) intent.getSerializableExtra("note");
+        if (note != null) {
+            date = note.date;
+            noteType = note.type;
+        } else {
+            date = (DateTime) intent.getSerializableExtra("date");
+            noteType = NoteTypes.valueOf(intent.getIntExtra("noteType", 1));
+        }
 
         timeFormatter = DateTimeFormat.forPattern("HH:mm");
 
@@ -92,10 +99,7 @@ public class NoteEditActivity
         endTimeButton = findViewById(R.id.add_end_time);
         notificationView = findViewById(R.id.notification);
         colorPickerFragment = (ColorPickerFragment) getSupportFragmentManager().findFragmentById(R.id.color_picker);
-
-        if (false) {
-            setLastActionView();
-        }
+        titleView = findViewById(R.id.title);
 
         Set<Integer> _keys = Constants.NOTE_COLORS.keySet();
         Integer[] keys = _keys.toArray(new Integer[_keys.size()]);
@@ -107,6 +111,7 @@ public class NoteEditActivity
             colors.add(color);
         }
         colorPickerFragment.setColors(colors);
+        colorPickerFragment.selectColorItem(colors.get(0));
 
         startTimeView.setPaintFlags(startTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         endTimeView.setPaintFlags(endTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -116,6 +121,10 @@ public class NoteEditActivity
         }
 
         notificationView.setClickable(false);
+
+        if (note != null) {
+            setNoteContent();
+        }
 
         findViewById(R.id.add_text).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,20 +259,64 @@ public class NoteEditActivity
         }
     }
 
-    private void addTextField() {
-        NoteContentFieldTextAreaFragment noteContentFieldTextAreaFragment = NoteContentFieldTextAreaFragment.newInstance();
+    private void setNoteContent() {
+        setLastActionView();
+
+        for (int i = 0; i < colorPickerFragment.colors.size(); i++) {
+            if (colorPickerFragment.colors.get(i).id == note.colorId) {
+                colorPickerFragment.selectColorItem(colorPickerFragment.colors.get(i));
+                break;
+            }
+        }
+
+        titleView.setText(note.title);
+        for (int i = 0; i < note.contentFields.size(); i++) {
+            NoteContentField _contentField = note.contentFields.get(i);
+
+            if (_contentField instanceof NoteContentFieldTextArea) {
+                NoteContentFieldTextArea contentField = (NoteContentFieldTextArea) _contentField;
+                addTextField(false, contentField.text);
+            } else if (_contentField instanceof NoteContentFieldListItem) {
+                NoteContentFieldListItem contentField = (NoteContentFieldListItem) _contentField;
+                addListItemField(false, contentField.text, contentField.isChecked);
+            }
+        }
+
+        notificationView.setChecked(note.isNotificationEnabled);
+        if (note.isNotificationEnabled) {
+            notificationView.setClickable(true);
+        }
+        startDateTime = note.startDateTime;
+        endDateTime = note.endDateTime;
+        setTimeView();
+    }
+
+    private NoteContentFieldTextAreaFragment addTextField() {
+        return addTextField(true, null);
+    }
+
+    private NoteContentFieldTextAreaFragment addTextField(Boolean allowAutofocus, String input) {
+        NoteContentFieldTextAreaFragment noteContentFieldTextAreaFragment = NoteContentFieldTextAreaFragment.newInstance(allowAutofocus, input);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content_fields_wrapper, noteContentFieldTextAreaFragment).commit();
 
         contentFieldsViews.add(noteContentFieldTextAreaFragment);
+
+        return noteContentFieldTextAreaFragment;
     }
 
-    private void addListItemField() {
-        NoteContentFieldListItemFragment noteContentFieldListItemFragment = NoteContentFieldListItemFragment.newInstance();
+    private NoteContentFieldListItemFragment addListItemField() {
+        return addListItemField(true, null, false);
+    }
+
+    private NoteContentFieldListItemFragment addListItemField(Boolean allowAutofocus, String input, Boolean isChecked) {
+        NoteContentFieldListItemFragment noteContentFieldListItemFragment = NoteContentFieldListItemFragment.newInstance(allowAutofocus, input, isChecked);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.content_fields_wrapper, noteContentFieldListItemFragment).commit();
 
         contentFieldsViews.add(noteContentFieldListItemFragment);
+
+        return noteContentFieldListItemFragment;
     }
 
     private void addImageField() {
@@ -332,7 +385,6 @@ public class NoteEditActivity
                     endDateTime = null;
                 }
                 setTimeView();
-                setNotificationCheckbox();
             }
         });
 
@@ -359,12 +411,6 @@ public class NoteEditActivity
         }
     }
 
-    private void setNotificationCheckbox() {
-        if (startDateTime != null) {
-
-        }
-    }
-
     private void setLastActionView() {
         String text = "";
 
@@ -388,17 +434,17 @@ public class NoteEditActivity
 
     private void save() {
         Note note = new Note();
-        note.id = -1;
+        note.id = this.note != null ? this.note.id : -1;
         note.colorId = colorPickerFragment.getSelectedColor().id;
         note.date = date;
         note.startDateTime = startDateTime;
         note.endDateTime = endDateTime;
-        note.isFinished = false;
+        note.isFinished = this.note != null ? this.note.isFinished : false;
         note.isNotificationEnabled = notificationView.isChecked();
         note.lastActionDate = DateTime.now();
-        note.lastAction = NoteActions.ADD;
+        note.lastAction = this.note != null ? NoteActions.EDIT : NoteActions.ADD;
         note.type = noteType;
-        note.title = ((EditText) findViewById(R.id.title)).getText().toString();
+        note.title = titleView.getText().toString();
 
         ArrayList<NoteContentField> contentFields = new ArrayList<>();
         for (int i = 0; i < contentFieldsViews.size(); i++) {

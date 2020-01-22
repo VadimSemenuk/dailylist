@@ -3,6 +3,7 @@ package com.mamindeveloper.dailylist.NotesList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mamindeveloper.dailylist.Main.MainActivity;
+import com.mamindeveloper.dailylist.NoteEdit.NoteEditActivity;
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.NoteRepository;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.joda.time.DateTime;
 
@@ -127,7 +130,9 @@ public class NoteListFragment extends Fragment implements NoteRecyclerViewAdapte
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
-
+                    Intent intent = new Intent(getContext(), NoteEditActivity.class);
+                    intent.putExtra("note", note);
+                    getActivity().startActivityForResult(intent, 0);
                 } else if (item == 1) {
                     NoteRepository.getInstance().deleteNote(note);
                     updateData();

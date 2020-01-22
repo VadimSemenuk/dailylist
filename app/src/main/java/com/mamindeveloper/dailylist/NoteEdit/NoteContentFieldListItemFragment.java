@@ -23,8 +23,15 @@ public class NoteContentFieldListItemFragment extends Fragment {
     public NoteContentFieldListItemFragment() {
     }
 
-    public static NoteContentFieldListItemFragment newInstance() {
+    public static NoteContentFieldListItemFragment newInstance(Boolean allowAutofocus, String input, Boolean isChecked) {
         NoteContentFieldListItemFragment fragment = new NoteContentFieldListItemFragment();
+
+        Bundle args = new Bundle();
+        args.putString("input", input);
+        args.putBoolean("isChecked", isChecked);
+        args.putBoolean("allowAutofocus", allowAutofocus);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -59,7 +66,17 @@ public class NoteContentFieldListItemFragment extends Fragment {
         });
 
         inputView.setFocusableInTouchMode(true);
-        inputView.requestFocus();
+
+        Bundle args = getArguments();
+        String input = args.getString("input");
+        if (input != null) {
+            inputView.setText(input);
+        }
+        checkboxView.setChecked(args.getBoolean("isChecked"));
+
+        if (args.getBoolean("allowAutofocus")) {
+            inputView.requestFocus();
+        }
 
         return view;
     }
@@ -80,8 +97,16 @@ public class NoteContentFieldListItemFragment extends Fragment {
         return inputView.getText().toString();
     }
 
+    public void setInputValue(String data) {
+        inputView.setText(data);
+    }
+
     public Boolean getCheckedState() {
         return checkboxView.isChecked();
+    }
+
+    public void setCheckedState(Boolean state) {
+        checkboxView.setChecked(state);
     }
 
     public interface OnNoteContentFieldListItemFragmentInteraction {

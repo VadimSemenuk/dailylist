@@ -1,6 +1,8 @@
 package com.mamindeveloper.dailylist.NotesList;
 
-public class NoteContentFieldListItem extends NoteContentField {
+import java.io.Serializable;
+
+public class NoteContentFieldListItem extends NoteContentField implements Serializable {
     public String text;
     public Boolean isChecked;
 

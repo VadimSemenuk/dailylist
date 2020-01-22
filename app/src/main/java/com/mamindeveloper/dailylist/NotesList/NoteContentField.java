@@ -1,4 +1,6 @@
 package com.mamindeveloper.dailylist.NotesList;
 
-public class NoteContentField {
+import java.io.Serializable;
+
+public class NoteContentField implements Serializable {
 }

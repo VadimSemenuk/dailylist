@@ -21,9 +21,8 @@ import java.util.ArrayList;
 public class ColorPickerFragment extends Fragment {
     View view;
     LinearLayout colorsListView;
-    AppCompatButton selectedColorButton;
 
-    ArrayList<ColorPickerItem> colors;
+    public ArrayList<ColorPickerItem> colors;
     ColorPickerItem selectedColor;
 
     public ColorPickerFragment() {
@@ -78,25 +77,24 @@ public class ColorPickerFragment extends Fragment {
             colorButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectColorItem(color, v);
+                    selectColorItem(color);
                 }
             });
 
-            colorsListView.addView(colorView);
+            colorButton.setTag(color.id);
 
-            if (i == 0) {
-                selectColorItem(color, colorButton);
-            }
+            colorsListView.addView(colorView);
         }
     }
 
-    public void selectColorItem(ColorPickerItem color, View colorView) {
-        if (selectedColorButton != null) {
-            selectedColorButton.setText(null);
+    public void selectColorItem(ColorPickerItem color) {
+        if (selectedColor != null) {
+            AppCompatButton colorView = colorsListView.findViewWithTag(selectedColor.id);
+            colorView.setText(null);
         }
-        selectedColor = color;
-        selectedColorButton = (AppCompatButton) colorView;
 
+        selectedColor = color;
+        AppCompatButton colorView = colorsListView.findViewWithTag(selectedColor.id);
         ((AppCompatButton) colorView.findViewById(R.id.color)).setText(Html.fromHtml("&#x2713;"));
     }
 

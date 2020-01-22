@@ -5,9 +5,10 @@ import com.mamindeveloper.dailylist.Enums.NoteActions;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Note {
+public class Note implements Serializable {
     public int id;
 
     public int colorId;

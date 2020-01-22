@@ -22,8 +22,14 @@ public class NoteContentFieldTextAreaFragment extends Fragment {
     public NoteContentFieldTextAreaFragment() {
     }
 
-    public static NoteContentFieldTextAreaFragment newInstance() {
+    public static NoteContentFieldTextAreaFragment newInstance(Boolean allowAutofocus, String input) {
         NoteContentFieldTextAreaFragment fragment = new NoteContentFieldTextAreaFragment();
+
+        Bundle args = new Bundle();
+        args.putString("input", input);
+        args.putBoolean("allowAutofocus", allowAutofocus || false);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -57,7 +63,16 @@ public class NoteContentFieldTextAreaFragment extends Fragment {
         });
 
         inputView.setFocusableInTouchMode(true);
-        inputView.requestFocus();
+
+        Bundle args = getArguments();
+        String input = args.getString("input");
+        if (input != null) {
+            inputView.setText(input);
+        }
+
+        if (args.getBoolean("allowAutofocus")) {
+            inputView.requestFocus();
+        }
 
         return view;
     }
