@@ -52,16 +52,27 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
 
         holder.mColorView.setBackgroundColor(Color.parseColor(note.getColor()));
 
-        String noteTime = "";
-        String startTimeFormatted = timeFormatter.print(note.startDateTime);
-        noteTime += startTimeFormatted;
-        if (note.endDateTime != null) {
-            String endTimeFormatted = timeFormatter.print(note.endDateTime);
-            noteTime += " - " + endTimeFormatted;
-        }
-        holder.mTimeView.setText(noteTime);
+        if (note.isNotificationEnabled || note.startDateTime != null || note.endDateTime != null) {
+            holder.mNoteMetaInfoView.setVisibility(View.VISIBLE);
 
-        holder.mNotificationLabelView.setVisibility(note.isNotificationEnabled ? View.VISIBLE : View.GONE);
+            if (note.startDateTime != null || note.endDateTime != null) {
+                String noteTime = "";
+                String startTimeFormatted = timeFormatter.print(note.startDateTime);
+                noteTime += startTimeFormatted;
+                if (note.endDateTime != null) {
+                    String endTimeFormatted = timeFormatter.print(note.endDateTime);
+                    noteTime += " - " + endTimeFormatted;
+                }
+                holder.mTimeView.setText(noteTime);
+                holder.mTimeView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mTimeView.setVisibility(View.GONE);
+            }
+
+            holder.mNotificationLabelView.setVisibility(note.isNotificationEnabled ? View.VISIBLE : View.GONE);
+        } else {
+            holder.mNoteMetaInfoView.setVisibility(View.GONE);
+        }
 
         holder.mTitleView.setText(note.title);
 
@@ -123,6 +134,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         public final LinearLayout mColorView;
         public final TextView mTimeView;
         public final ImageView mNotificationLabelView;
+        public final LinearLayout mNoteMetaInfoView;
         public final TextView mTitleView;
         public final LinearLayout mContentFieldsWrapperView;
         public final TextView mHeaderView;
@@ -134,6 +146,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             mColorView = (LinearLayout) view.findViewById(R.id.note_color);
             mTimeView = (TextView) view.findViewById(R.id.note_time);
             mNotificationLabelView = (ImageView) view.findViewById(R.id.note_notification_label);
+            mNoteMetaInfoView = (LinearLayout) view.findViewById(R.id.note_meta_info);
             mTitleView = (TextView) view.findViewById(R.id.note_title);
             mContentFieldsWrapperView = (LinearLayout) view.findViewById(R.id.note_content_fields_wrapper);
             mHeaderView = (TextView) view.findViewById(R.id.title);

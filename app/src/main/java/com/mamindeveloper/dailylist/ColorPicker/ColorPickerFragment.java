@@ -83,6 +83,10 @@ public class ColorPickerFragment extends Fragment {
             });
 
             colorsListView.addView(colorView);
+
+            if (i == 0) {
+                selectColorItem(color, colorButton);
+            }
         }
     }
 

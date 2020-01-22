@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.NoteRepository;
@@ -23,6 +24,14 @@ public class NoteListFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
 
     ArrayList<Note> notes = new ArrayList<>();
+
+    public NoteTypes mode;
+    public DateTime date;
+    public String search;
+
+    RecyclerView recyclerView;
+    TextView emptyListView;
+    NoteRecyclerViewAdapter noteRecyclerViewAdapter;
 
     public NoteListFragment() {
     }
@@ -43,12 +52,17 @@ public class NoteListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
-        notes = NoteRepository.getInstance().getNotes(NoteTypes.Note, null, null);
-
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view;
+
+        noteRecyclerViewAdapter = new NoteRecyclerViewAdapter(notes, mListener, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new NoteRecyclerViewAdapter(notes, mListener, false));
+        recyclerView.setAdapter(noteRecyclerViewAdapter);
+
+        emptyListView = (TextView) view.findViewById(R.id.empty_list);
+
+        setListView();
+
         return view;
     }
 
@@ -63,6 +77,34 @@ public class NoteListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updateData() {
+        ArrayList<Note> nextNotes = NoteRepository.getInstance().getNotes(mode, date, search);
+        notes.clear();
+        notes.addAll(nextNotes);
+        if (noteRecyclerViewAdapter != null) {
+            noteRecyclerViewAdapter.notifyDataSetChanged();
+        }
+
+        setListView();
+    }
+
+    private void setListView() {
+        if (emptyListView != null && recyclerView != null) {
+            if (notes.isEmpty()) {
+                emptyListView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                emptyListView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
+        updateData();
     }
 
     public interface OnListFragmentInteractionListener {

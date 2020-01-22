@@ -22,19 +22,25 @@ import com.mamindeveloper.dailylist.AboutActivity;
 import com.mamindeveloper.dailylist.Login.LoginActivity;
 import com.mamindeveloper.dailylist.NoteEdit.NoteEditActivity;
 import com.mamindeveloper.dailylist.NotesList.NoteListFragment;
+import com.mamindeveloper.dailylist.NotesList.NoteTypes;
 import com.mamindeveloper.dailylist.NotesList.NotesListFragment;
 import com.mamindeveloper.dailylist.ProfileActivity;
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.AuthRepository;
 import com.mamindeveloper.dailylist.SettingsActivity;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import org.joda.time.DateTime;
 
 public class MainActivity
         extends AppCompatActivity
         implements NotesListFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        OnDateSelectedListener {
 
     DrawerLayout drawer;
     DiaryFragment diaryFragment;
@@ -42,9 +48,9 @@ public class MainActivity
     Menu menu;
     NavigationView navigationView;
     MaterialCalendarView calendarView;
-    MainFragments activeFragment;
     LinearLayout calendarWrapperView;
 
+    MainFragments activeFragment;
     Boolean isSearchMode = false;
 
     @Override
@@ -68,16 +74,29 @@ public class MainActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_diary);
-        activeFragment = MainFragments.Diary;
 
         diaryFragment = DiaryFragment.newInstance();
         noteListFragment = NoteListFragment.newInstance();
+        noteListFragment.mode = NoteTypes.Note;
+        noteListFragment.updateData();
 
         calendarView = findViewById(R.id.calendar_view);
         calendarView.setTopbarVisible(false);
         calendarView.state().edit()
                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                 .commit();
+        calendarView.setDateSelected(CalendarDay.today(), true);
+        calendarView.setOnDateChangedListener(this);
+
+        findViewById(R.id.move_to_today).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarView.setDateSelected(calendarView.getSelectedDate(), false);
+                calendarView.setDateSelected(CalendarDay.today(), true);
+                calendarView.setCurrentDate(CalendarDay.today(), true);
+                onDateSelected(calendarView, CalendarDay.today(), true);
+            }
+        });
 
         setDiaryFragment();
     }
@@ -134,7 +153,18 @@ public class MainActivity
 
         } else if (id == R.id.app_bar_main_add) {
             Intent intent = new Intent(this, NoteEditActivity.class);
-            startActivity(intent);
+
+            CalendarDay calendarDay = calendarView.getSelectedDate();
+            DateTime currentDate = new DateTime().withDate(calendarDay.getYear(), calendarDay.getMonth(), calendarDay.getDay());
+            intent.putExtra("date", currentDate);
+
+            NoteTypes noteType = NoteTypes.Diary;
+            if (activeFragment == MainFragments.Notes) {
+                noteType = NoteTypes.Note;
+            }
+            intent.putExtra("noteType", noteType.getValue());
+
+            startActivityForResult(intent, 0);
         }
 
         return true;
@@ -187,6 +217,26 @@ public class MainActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    @Override
+    public void onDateSelected(MaterialCalendarView calendarView, CalendarDay calendarDay, boolean selected) {
+        DateTime date = new DateTime().withDate(calendarDay.getYear(), calendarDay.getMonth(), calendarDay.getDay());
+        diaryFragment.setDate(date);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
+        super.onActivityResult(requestCode, resultCode, returnedIntent);
+
+        if (requestCode == 0) {
+            if (activeFragment == MainFragments.Diary) {
+                diaryFragment.updateData();
+            } else if (activeFragment == MainFragments.Notes) {
+                noteListFragment.updateData();
+            } else if (activeFragment == MainFragments.Trash) {
+            }
+        }
     }
 
     private void setDiaryFragment() {

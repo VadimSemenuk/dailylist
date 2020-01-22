@@ -3,10 +3,8 @@
 
     <!--    main-->
     <string name="app_bar_main_search_hint">Поиск</string>
-
     <string name="app_bar_main_calendar">Календарь</string>
     <string name="app_bar_main_add">Добавить</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="menu_diary">Ежедневник</string>
@@ -15,6 +13,7 @@
     <string name="nav_profile">Профиль</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_about">О приложении</string>
+    <string name="empty_list">Заметки отсутствуют</string>
 
     <!--    note-edit-->
     <string name="app_bar_note_edit_confirm">Сохранить</string>

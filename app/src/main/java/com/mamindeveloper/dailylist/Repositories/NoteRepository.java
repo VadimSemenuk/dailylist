@@ -2,6 +2,7 @@ package com.mamindeveloper.dailylist.Repositories;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -63,14 +64,24 @@ public class NoteRepository {
     public ArrayList<Note> getNotes(NoteTypes type, DateTime dateFilter, String search) {
         ArrayList<Note> notes = new ArrayList<>();
 
-        String sql = "select id, colorId, startDateTime, endDateTime, isFinished, isNotificationEnabled, lastActionDate, lastAction, type, title, contentFields " +
-                "from notes;";
-//        + "where start_date_time >= ? AND start_date_time < ?";
+        ArrayList<String> filterStatements = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
+        if (dateFilter != null) {
+            filterStatements.add("date >= ?");
+            params.add(String.valueOf(dateFilter.withTimeAtStartOfDay().getMillis()));
+            filterStatements.add("date < ?");
+            params.add(String.valueOf(dateFilter.plusDays(1).withTimeAtStartOfDay().getMillis()));
+        }
+        filterStatements.add("type = ?");
+        params.add(String.valueOf(type.getValue()));
 
-        String[] params = new String[] { String.valueOf(dateFilter.withTimeAtStartOfDay().getMillis()), String.valueOf(dateFilter.plusDays(1).withTimeAtStartOfDay().getMillis()) };
+        String sql = "select id, colorId, date, startDateTime, endDateTime, isFinished, isNotificationEnabled, lastActionDate, lastAction, type, title, contentFields "
+                + "from notes"
+                + (filterStatements.size() > 0 ? (" where " + TextUtils.join(" AND ", filterStatements) + ";") : ";");
 
-//        Cursor cursor = DBHelper.getInstance().getWritableDatabase().rawQuery(sql, params);
-        Cursor cursor = DBHelper.getInstance().getWritableDatabase().rawQuery(sql, null);
+        String[] _params = new String[params.size()];
+        _params = params.toArray(_params);
+        Cursor cursor = DBHelper.getInstance().getWritableDatabase().rawQuery(sql, _params);
 
         if(cursor.moveToFirst()){
             do{
@@ -80,11 +91,18 @@ public class NoteRepository {
 
                 note.colorId = cursor.getInt(cursor.getColumnIndex("colorId"));
 
-                long _startDateTime = cursor.getLong(cursor.getColumnIndex("startDateTime"));
-                note.startDateTime = new DateTime(_startDateTime);
+                long _date = cursor.getLong(cursor.getColumnIndex("date"));
+                note.date = new DateTime(_date);
 
-                long _endDateTime = cursor.getLong(cursor.getColumnIndex("endDateTime"));
-                note.endDateTime = new DateTime(_endDateTime);
+                if (!cursor.isNull(cursor.getColumnIndex("startDateTime"))) {
+                    long _startDateTime = cursor.getLong(cursor.getColumnIndex("startDateTime"));
+                    note.startDateTime = new DateTime(_startDateTime);
+                }
+
+                if (!cursor.isNull(cursor.getColumnIndex("endDateTime"))) {
+                    long _endDateTime = cursor.getLong(cursor.getColumnIndex("endDateTime"));
+                    note.endDateTime = new DateTime(_endDateTime);
+                }
 
                 note.isFinished = cursor.getInt(cursor.getColumnIndex("isFinished")) == 1 ? true : false;
 
@@ -93,9 +111,9 @@ public class NoteRepository {
                 long _lastActionDate = cursor.getLong(cursor.getColumnIndex("lastActionDate"));
                 note.lastActionDate = new DateTime(_lastActionDate);
 
-                note.lastAction = NoteActions.values()[cursor.getInt(cursor.getColumnIndex("lastAction"))];
+                note.lastAction = NoteActions.valueOf(cursor.getInt(cursor.getColumnIndex("lastAction")));
 
-                note.type = NoteTypes.values()[cursor.getInt(cursor.getColumnIndex("type"))];
+                note.type = NoteTypes.valueOf(cursor.getInt(cursor.getColumnIndex("type")));
 
                 note.title = cursor.getString(cursor.getColumnIndex("title"));
 
@@ -131,10 +149,14 @@ public class NoteRepository {
 
     public void addNote(Note note) {
         ContentValues cv = new ContentValues();
-        cv.put("id", note.id);
         cv.put("colorId", note.colorId);
-        cv.put("startDateTime", note.startDateTime.getMillis());
-        cv.put("endDateTime", note.endDateTime.getMillis());
+        cv.put("date", note.date.getMillis());
+        if (note.startDateTime != null) {
+            cv.put("startDateTime", note.startDateTime.getMillis());
+        }
+        if (note.endDateTime != null) {
+            cv.put("endDateTime", note.endDateTime.getMillis());
+        }
         cv.put("isFinished", note.isFinished ? 1 : 0);
         cv.put("isNotificationEnabled", note.isNotificationEnabled ? 1 : 0);
         cv.put("lastActionDate", note.lastActionDate.getMillis());

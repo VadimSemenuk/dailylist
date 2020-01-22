@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mamindeveloper.dailylist.NotesList.NoteListFragment;
+import com.mamindeveloper.dailylist.NotesList.NoteTypes;
 import com.mamindeveloper.dailylist.NotesList.NotesListFragment;
 import com.mamindeveloper.dailylist.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -24,13 +26,20 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import org.joda.time.DateTime;
+
 public class DiaryFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     ViewPager notesListPager;
     PagerAdapter pagerAdapter;
+    NoteListFragment noteListFragment;
 
     public DiaryFragment() {
+        noteListFragment = NoteListFragment.newInstance();
+        noteListFragment.mode = NoteTypes.Diary;
+        noteListFragment.date = DateTime.now();
+        noteListFragment.updateData();
     }
 
     public static DiaryFragment newInstance() {
@@ -73,6 +82,14 @@ public class DiaryFragment extends Fragment {
         notesListPager = null;
     }
 
+    public void updateData() {
+        noteListFragment.updateData();
+    }
+
+    public void setDate(DateTime date) {
+        noteListFragment.setDate(date);
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
@@ -85,7 +102,7 @@ public class DiaryFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return NotesListFragment.newInstance();
+            return noteListFragment;
         }
 
         @Override

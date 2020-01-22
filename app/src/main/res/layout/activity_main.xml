@@ -29,6 +29,7 @@
                 android:id="@+id/calendar_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -48,6 +49,7 @@
                         android:text="Декабрь, 2019" />
 
                     <ImageButton
+                        android:id="@+id/move_to_today"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"

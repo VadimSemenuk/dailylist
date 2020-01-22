@@ -11,6 +11,7 @@ public class Note {
     public int id;
 
     public int colorId;
+    public DateTime date;
     public DateTime startDateTime;
     public DateTime endDateTime;
     public Boolean isFinished;

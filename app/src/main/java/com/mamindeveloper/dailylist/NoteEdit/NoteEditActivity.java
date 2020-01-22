@@ -52,11 +52,12 @@ public class NoteEditActivity
     DateTimeFormatter timeFormatter;
 
     Note note;
-    ArrayList<Fragment> contentFieldsViews = new ArrayList<>();
     DateTime date;
     DateTime startDateTime;
     DateTime endDateTime;
+    NoteTypes noteType;
 
+    ArrayList<Fragment> contentFieldsViews = new ArrayList<>();
     LinearLayout contentFieldsWrapper;
     Fragment contentFieldFragmentToAddOnResume;
     TextView startTimeView;
@@ -71,9 +72,11 @@ public class NoteEditActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_edit);
 
-        timeFormatter = DateTimeFormat.forPattern("HH:mm");
+        Intent intent = getIntent();
+        date = (DateTime) intent.getSerializableExtra("date");
+        noteType = NoteTypes.valueOf(intent.getIntExtra("noteType", 1));
 
-        date = DateTime.now().withTimeAtStartOfDay();
+        timeFormatter = DateTimeFormat.forPattern("HH:mm");
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -107,6 +110,12 @@ public class NoteEditActivity
 
         startTimeView.setPaintFlags(startTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         endTimeView.setPaintFlags(endTimeView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        if (noteType == NoteTypes.Note) {
+            findViewById(R.id.time_controls_wrapper).setVisibility(View.GONE);
+        }
+
+        notificationView.setClickable(false);
 
         findViewById(R.id.add_text).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +170,11 @@ public class NoteEditActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.note_edit, menu);
+
+        if (noteType == NoteTypes.Note) {
+            menu.findItem(R.id.app_bar_note_edit_calendar).setVisible(false);
+        }
+
         return true;
     }
 
@@ -299,6 +313,7 @@ public class NoteEditActivity
                         if (type == 0) {
                             startDateTime = new DateTime(date).withHourOfDay(hourOfDay).withMinuteOfHour(minute);
                             notificationView.setChecked(true);
+                            notificationView.setClickable(true);
                         } else if (type == 1) {
                             endDateTime = new DateTime(date).withHourOfDay(hourOfDay).withMinuteOfHour(minute);
                         }
@@ -312,10 +327,12 @@ public class NoteEditActivity
                 if (type == 0) {
                     startDateTime = null;
                     notificationView.setChecked(false);
+                    notificationView.setClickable(false);
                 } else if (type == 1) {
                     endDateTime = null;
                 }
                 setTimeView();
+                setNotificationCheckbox();
             }
         });
 
@@ -339,6 +356,12 @@ public class NoteEditActivity
         } else {
             endTimeView.setVisibility(View.GONE);
             endTimeButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setNotificationCheckbox() {
+        if (startDateTime != null) {
+
         }
     }
 
@@ -366,13 +389,14 @@ public class NoteEditActivity
     private void save() {
         Note note = new Note();
         note.colorId = colorPickerFragment.getSelectedColor().id;
+        note.date = date;
         note.startDateTime = startDateTime;
         note.endDateTime = endDateTime;
         note.isFinished = false;
         note.isNotificationEnabled = notificationView.isChecked();
         note.lastActionDate = DateTime.now();
         note.lastAction = NoteActions.ADD;
-        note.type = NoteTypes.Diary;
+        note.type = noteType;
         note.title = ((EditText) findViewById(R.id.title)).getText().toString();
 
         ArrayList<NoteContentField> contentFields = new ArrayList<>();
@@ -392,21 +416,21 @@ public class NoteEditActivity
     }
 
     public void onTextAreaRemove(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().remove(fragment).commit();
-
-        contentFieldsViews.remove(fragment);
+        onContentFieldRemove(fragment);
     }
 
     public void onListItemRemove(Fragment fragment) {
+        onContentFieldRemove(fragment);
+    }
+
+    public void onImageRemove(Fragment fragment) {
+        onContentFieldRemove(fragment);
+    }
+
+    public void onContentFieldRemove(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().remove(fragment).commit();
 
         contentFieldsViews.remove(fragment);
-    }
-
-    public void onImageRemove(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().remove(fragment).commit();
     }
 }
