@@ -22,6 +22,7 @@
     <PreferenceCategory app:title="@string/interface_header">
 
         <SwitchPreferenceCompat
+            app:defaultValue="true"
             app:key="darkTheme"
             app:title="@string/dark_theme_title" />
 
@@ -34,6 +35,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
+            app:defaultValue="true"
             app:key="collapseNotes"
             app:title="@string/collapse_notes_title" />
 
@@ -53,6 +55,7 @@
     <PreferenceCategory app:title="@string/other_header">
 
         <SwitchPreferenceCompat
+            app:defaultValue="true"
             app:key="autoNotification"
             app:title="@string/auto_notification_title" />
     </PreferenceCategory>

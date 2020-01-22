@@ -9,7 +9,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mamindeveloper.dailylist.App;
 import com.mamindeveloper.dailylist.DBHelper;
+import com.mamindeveloper.dailylist.Enums.SortDirection;
+import com.mamindeveloper.dailylist.Enums.SortTypes;
 import com.mamindeveloper.dailylist.NotesList.Note;
 import com.mamindeveloper.dailylist.Enums.NoteActions;
 import com.mamindeveloper.dailylist.NotesList.NoteContentField;
@@ -21,6 +24,8 @@ import com.mamindeveloper.dailylist.NotesList.NoteTypes;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class NoteRepository {
     private static final NoteRepository ourInstance = new NoteRepository();
@@ -30,6 +35,54 @@ public class NoteRepository {
     }
 
     private NoteRepository() {
+    }
+
+    class SortByAddedTime implements Comparator<Object> {
+        SortDirection direction;
+
+        private SortByAddedTime(SortDirection direction) {
+            this.direction = direction;
+        }
+
+        public int compare(Object a, Object b) {
+            if (direction == SortDirection.ASC) {
+                return ((Note) a).id - ((Note) b).id;
+            } else {
+                return ((Note) b).id - ((Note) a).id;
+            }
+        }
+    }
+
+    class SortByNoteTime implements Comparator<Object> {
+        SortDirection direction;
+
+        private SortByNoteTime(SortDirection direction) {
+            this.direction = direction;
+        }
+
+        public int compare(Object a, Object b) {
+            Note noteA = (Note) a;
+            Note noteB = (Note) b;
+
+            if (noteA.startDateTime == null && noteB.startDateTime == null) {
+                return 0;
+            }
+            if (noteA.startDateTime == null) {
+                return 1;
+            }
+            if (noteB.startDateTime == null) {
+                return -1;
+            }
+
+            long noteAValue = noteA.startDateTime.getMillis();
+            long noteBValue = noteB.startDateTime.getMillis();
+
+            if (direction == SortDirection.ASC) {
+                return (int) (noteAValue - noteBValue);
+            } else {
+                return (int) (noteBValue - noteAValue);
+            }
+        }
     }
 
     public ArrayList<Note> _getNotes(NoteTypes type, DateTime dateFilter, String search) {
@@ -174,6 +227,13 @@ public class NoteRepository {
             while (cursor.moveToNext());
         }
         cursor.close();
+
+        SortTypes sortSetting = SortTypes.valueOf(Integer.parseInt(App.sharedPreferences.getString("sort", "1")));
+        if (sortSetting == SortTypes.NOTE_TIME) {
+            Collections.sort(notes, new SortByAddedTime(SortDirection.valueOf(Integer.parseInt(App.sharedPreferences.getString("sortDirection", "1")))));
+        } else {
+            Collections.sort(notes, new SortByNoteTime(SortDirection.valueOf(Integer.parseInt(App.sharedPreferences.getString("sortDirection", "1")))));
+        }
 
         return notes;
     }

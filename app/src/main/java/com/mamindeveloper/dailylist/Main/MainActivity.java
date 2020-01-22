@@ -53,6 +53,9 @@ public class MainActivity
     MainFragments activeFragment;
     Boolean isSearchMode = false;
 
+    int NOTE_EDIT_REQUEST_CODE = 0;
+    int SETTINGS_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,7 +181,7 @@ public class MainActivity
             }
             intent.putExtra("noteType", noteType.getValue());
 
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, NOTE_EDIT_REQUEST_CODE);
         }
 
         return true;
@@ -196,7 +199,7 @@ public class MainActivity
         } else if (id == R.id.nav_trash) {
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, SETTINGS_REQUEST_CODE);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -249,13 +252,18 @@ public class MainActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
         super.onActivityResult(requestCode, resultCode, returnedIntent);
 
-        if (requestCode == 0) {
+        if (requestCode == NOTE_EDIT_REQUEST_CODE) {
             if (activeFragment == MainFragments.Diary) {
                 diaryFragment.updateData();
             } else if (activeFragment == MainFragments.Notes) {
                 noteListFragment.updateData();
             } else if (activeFragment == MainFragments.Trash) {
             }
+        }
+
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            diaryFragment.updateData();
+            noteListFragment.updateData();
         }
     }
 

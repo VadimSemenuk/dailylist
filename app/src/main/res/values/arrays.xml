@@ -12,8 +12,8 @@
 
     <!--    Sort direction preference-->
     <string-array name="sort_direction_entries">
-        <item>По указанному времени</item>
-        <item>По времени добавления</item>
+        <item>Прямой порядок</item>
+        <item>Обратный порядок</item>
     </string-array>
 
     <string-array name="sort_direction_values">

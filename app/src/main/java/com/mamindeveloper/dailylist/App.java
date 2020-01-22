@@ -10,8 +10,7 @@ import androidx.preference.PreferenceManager;
 public class App extends Application {
     private static Context mContext;
 
-
-    SharedPreferences sharedPreferences;
+    public static SharedPreferences sharedPreferences;
 
     public static Context getAppContext() {
         return App.mContext;
@@ -20,6 +19,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
