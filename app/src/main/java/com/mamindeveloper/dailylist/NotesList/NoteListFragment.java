@@ -1,6 +1,8 @@
 package com.mamindeveloper.dailylist.NotesList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mamindeveloper.dailylist.Main.MainActivity;
 import com.mamindeveloper.dailylist.R;
 import com.mamindeveloper.dailylist.Repositories.NoteRepository;
 
@@ -19,10 +22,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
-public class NoteListFragment extends Fragment {
-
-    private OnListFragmentInteractionListener mListener;
-
+public class NoteListFragment extends Fragment implements NoteRecyclerViewAdapter.OnListFragmentInteractionListener {
     ArrayList<Note> notes = new ArrayList<>();
 
     public NoteTypes mode;
@@ -54,7 +54,7 @@ public class NoteListFragment extends Fragment {
 
         Context context = view.getContext();
 
-        noteRecyclerViewAdapter = new NoteRecyclerViewAdapter(notes, mListener, false);
+        noteRecyclerViewAdapter = new NoteRecyclerViewAdapter(notes, this, false, true);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(noteRecyclerViewAdapter);
@@ -70,13 +70,11 @@ public class NoteListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        mListener = (OnListFragmentInteractionListener) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     public void updateData() {
@@ -107,7 +105,36 @@ public class NoteListFragment extends Fragment {
         updateData();
     }
 
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Note item);
+    public void onNoteClick(Note note) {
+    }
+
+    public void onNoteListItemCheckedStateChange(Note note, int contentFieldIndex, Boolean nextState) {
+        ((NoteContentFieldListItem) note.contentFields.get(contentFieldIndex)).isChecked = nextState;
+        NoteRepository.getInstance().addNote(note);
+    }
+
+    public void onNoteFinishedStateChange(Note note, Boolean nextState) {
+        note.isFinished = nextState;
+        NoteRepository.getInstance().addNote(note);
+    }
+
+    public void onContextMenuRequest(final Note note) {
+        final String[] mCatsName = {getString(R.string.edit_note), getString(R.string.remove_note)};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setItems(mCatsName, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == 0) {
+
+                } else if (item == 1) {
+                    NoteRepository.getInstance().deleteNote(note);
+                    updateData();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

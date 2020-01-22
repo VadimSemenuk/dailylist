@@ -1,5 +1,6 @@
 package com.mamindeveloper.dailylist.NotesList;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
@@ -7,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,13 +29,15 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
 
     private final ArrayList<Note> mValues;
     private Boolean showHeader;
+    private Boolean isCollapseNotesAllowed;
 
-    private final NoteListFragment.OnListFragmentInteractionListener mListener;
+    private final OnListFragmentInteractionListener mListener;
 
-    public NoteRecyclerViewAdapter(ArrayList<Note> items, NoteListFragment.OnListFragmentInteractionListener listener, Boolean showHeader) {
+    public NoteRecyclerViewAdapter(ArrayList<Note> items, OnListFragmentInteractionListener listener, Boolean showHeader, Boolean isCollapseNotesAllowed) {
         mValues = items;
         mListener = listener;
         this.showHeader = showHeader;
+        this.isCollapseNotesAllowed = isCollapseNotesAllowed;
 
         timeFormatter = DateTimeFormat.forPattern("HH:mm");
         sectionTitleFormatter = DateTimeFormat.forPattern("d MMMM, yyyy");
@@ -96,6 +101,14 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
                 checkBox.setText(contentField.text);
                 checkBox.setChecked(contentField.isChecked);
                 holder.mContentFieldsWrapperView.addView(checkBox, a);
+
+                final int index = a;
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mListener.onNoteListItemCheckedStateChange(holder.mItem, index, isChecked);
+                    }
+                });
             }
             if (_contentField instanceof NoteContentFieldImage) {
                 NoteContentFieldImage contentField = (NoteContentFieldImage) _contentField;
@@ -107,12 +120,35 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             }
         }
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        if (isCollapseNotesAllowed) {
+            holder.cardView.setTag("collapsed");
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.cardView.getLayoutParams();
+            layoutParams.height = 180;
+            holder.cardView.setLayoutParams(layoutParams);
+        } else {
+            holder.cardView.setTag("expanded");
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.cardView.getLayoutParams();
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            holder.cardView.setLayoutParams(layoutParams);
+        }
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if (isCollapseNotesAllowed) {
+                    if ((String) holder.cardView.getTag() == "expanded") {
+                        holder.cardView.setTag("collapsed");
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.cardView.getLayoutParams();
+                        layoutParams.height = 180;
+                        holder.cardView.setLayoutParams(layoutParams);
+                    } else {
+                        holder.cardView.setTag("expanded");
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.cardView.getLayoutParams();
+                        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                        holder.cardView.setLayoutParams(layoutParams);
+                    }
                 }
+
+                mListener.onNoteClick(holder.mItem);
             }
         });
 
@@ -122,6 +158,22 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         } else {
             holder.mHeaderView.setVisibility(View.GONE);
         }
+
+        holder.mNoteFinishedCheckBox.setChecked(note.isFinished);
+
+        holder.mNoteFinishedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mListener.onNoteFinishedStateChange(holder.mItem, isChecked);
+            }
+        });
+
+        holder.contextMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onContextMenuRequest(holder.mItem);
+            }
+        });
     }
 
     @Override
@@ -138,6 +190,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         public final TextView mTitleView;
         public final LinearLayout mContentFieldsWrapperView;
         public final TextView mHeaderView;
+        public final CheckBox mNoteFinishedCheckBox;
+        public final CardView cardView;
+        public final ImageButton contextMenuButton;
         public Note mItem;
 
         public ViewHolder(View view) {
@@ -150,11 +205,21 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             mTitleView = (TextView) view.findViewById(R.id.note_title);
             mContentFieldsWrapperView = (LinearLayout) view.findViewById(R.id.note_content_fields_wrapper);
             mHeaderView = (TextView) view.findViewById(R.id.title);
+            mNoteFinishedCheckBox = (CheckBox) view.findViewById(R.id.note_finished_trigger);
+            cardView = (CardView) view.findViewById(R.id.note_card);
+            contextMenuButton = (ImageButton) view.findViewById(R.id.note_context_menu);
         }
 
         @Override
         public String toString() {
             return super.toString() + " '" + mTitleView.getText() + "'";
         }
+    }
+
+    public interface OnListFragmentInteractionListener {
+        void onNoteClick(Note note);
+        void onNoteListItemCheckedStateChange(Note note, int contentFieldIndex, Boolean nextState);
+        void onNoteFinishedStateChange(Note note, Boolean nextState);
+        void onContextMenuRequest(Note note);
     }
 }

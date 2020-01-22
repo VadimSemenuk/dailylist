@@ -388,6 +388,7 @@ public class NoteEditActivity
 
     private void save() {
         Note note = new Note();
+        note.id = -1;
         note.colorId = colorPickerFragment.getSelectedColor().id;
         note.date = date;
         note.startDateTime = startDateTime;

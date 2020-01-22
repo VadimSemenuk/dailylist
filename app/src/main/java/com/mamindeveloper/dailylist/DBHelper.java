@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table notes ("
                 + "id integer primary key autoincrement,"
                 + "colorId integer,"
-                + "date integer, "
+                + "date integer,"
                 + "startDateTime integer,"
                 + "endDateTime integer,"
                 + "isFinished integer,"
@@ -36,7 +36,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "lastAction integer,"
                 + "type integer,"
                 + "title text,"
-                + "contentFields text" + ");");
+                + "contentFields text"
+                + ");");
     }
 
     @Override

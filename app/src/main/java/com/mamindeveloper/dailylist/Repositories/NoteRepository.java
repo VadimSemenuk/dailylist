@@ -168,6 +168,14 @@ public class NoteRepository {
         String contentFieldsJson = gson.toJson(note.contentFields);
         cv.put("contentFields", contentFieldsJson);
 
-        note.id = (int) DBHelper.getInstance().getWritableDatabase().insert("notes", null, cv);
+        if (note.id == -1) {
+            note.id = (int) DBHelper.getInstance().getWritableDatabase().insert("notes", null, cv);
+        } else {
+            DBHelper.getInstance().getWritableDatabase().update("notes", cv, "id = ?", new String[] { String.valueOf(note.id) });
+        }
+    }
+
+    public void deleteNote(Note note) {
+        DBHelper.getInstance().getWritableDatabase().delete("notes", "id = " + note.id, null);
     }
 }

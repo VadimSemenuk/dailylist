@@ -14,6 +14,8 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_about">О приложении</string>
     <string name="empty_list">Заметки отсутствуют</string>
+    <string name="edit_note">Изменить заметку</string>
+    <string name="remove_note">Удалить заметку</string>
 
     <!--    note-edit-->
     <string name="app_bar_note_edit_confirm">Сохранить</string>
